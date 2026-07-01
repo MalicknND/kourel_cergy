@@ -1,10 +1,11 @@
-import { Building2, ExternalLink, Mail, MapPin, Phone } from "lucide-react";
+import { Building2, ExternalLink, MapPin } from "lucide-react";
 
 import type { Member } from "@/types/member";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { ContactActions } from "@/components/contact-actions";
 import { cn } from "@/lib/utils";
 
 type MemberCardProps = {
@@ -37,8 +38,7 @@ export function MemberCard({ member }: MemberCardProps) {
       <CardContent className="space-y-3 text-sm">
         <InfoRow icon={Building2} value={member.entreprise || "Entreprise / école non renseignée"} />
         <InfoRow icon={MapPin} value={member.ville || "Ville non renseignée"} />
-        <InfoRow icon={Phone} value={member.telephone || "Téléphone non renseigné"} href={toPhoneHref(member.telephone)} />
-        <InfoRow icon={Mail} value={member.email || "Email non renseigné"} href={member.email ? `mailto:${member.email}` : undefined} />
+        <ContactActions email={member.email} phone={member.telephone} />
 
         {linkedInHref ? (
           <Button asChild variant="outline" className="mt-2 w-full">
@@ -75,28 +75,16 @@ function SituationBadge({ situation }: { situation: string }) {
 function InfoRow({
   icon: Icon,
   value,
-  href,
 }: {
   icon: typeof Building2;
   value: string;
-  href?: string;
 }) {
-  const content = (
-    <>
+  return (
+    <div className="flex gap-2 text-muted-foreground">
       <Icon className="mt-0.5 size-4 shrink-0 text-muted-foreground" />
       <span className="min-w-0 break-words">{value}</span>
-    </>
+    </div>
   );
-
-  if (href) {
-    return (
-      <a className="flex gap-2 text-foreground transition-colors hover:text-primary" href={href}>
-        {content}
-      </a>
-    );
-  }
-
-  return <div className="flex gap-2 text-muted-foreground">{content}</div>;
 }
 
 function getInitials(member: Member): string {
@@ -108,11 +96,6 @@ function getInitials(member: Member): string {
     .toUpperCase();
 
   return initials || "DA";
-}
-
-function toPhoneHref(phone: string): string | undefined {
-  const normalized = phone.replace(/[^\d+]/g, "");
-  return normalized ? `tel:${normalized}` : undefined;
 }
 
 function toExternalHref(url: string): string | undefined {

@@ -37,7 +37,8 @@ const columnMap = {
   entreprise: ["Entreprise / École", "Entreprise / Ecole", "Entreprise", "École", "Ecole"],
   situation: ["Votre situation actuelle", "Situation actuelle", "Situation"],
   linkedIn: ["Lien LinkedIn", "LinkedIn", "Lien Linkedin", "Profil LinkedIn", "Profil Linkedin"],
-} satisfies Record<keyof Omit<Member, "id">, string[]>;
+  consentement: ["Souhaitez-vous apparaître dans l'annuaire des membres du Kourel ?", "Apparaître dans l'annuaire", "Apparaitre dans l'annuaire", "Consentement"],
+} satisfies Record<keyof Omit<Member, "id"> | "consentement", string[]>;
 
 export async function getMembers(): Promise<Member[]> {
   const spreadsheetId = getRequiredEnv("GOOGLE_SHEETS_ID");
@@ -131,6 +132,7 @@ function mapRowsToMembers(rows: string[][]): Member[] {
   const headerIndexes = createHeaderIndexes(headers);
 
   return bodyRows
+    .filter((row) => hasDirectoryConsent(row, headerIndexes))
     .map((row, index) => createMember(row, headerIndexes, index))
     .filter(hasMemberIdentity);
 }
@@ -193,6 +195,16 @@ function findHeaderIndex(
 
 function hasMemberIdentity(member: Member): boolean {
   return Boolean(member.nom || member.prenom || member.email);
+}
+
+function hasDirectoryConsent(row: string[], headerIndexes: Record<string, number>): boolean {
+  const consent = getCell(row, headerIndexes, columnMap.consentement);
+
+  if (!consent) {
+    return false;
+  }
+
+  return ["oui", "yes", "true", "1"].includes(normalizeHeader(consent));
 }
 
 function normalizeHeader(value: string): string {

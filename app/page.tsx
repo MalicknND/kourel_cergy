@@ -1,3 +1,4 @@
+import { AboutDirectory } from "@/components/about-directory";
 import { MemberDirectory } from "@/components/member-directory";
 import { StatsCards } from "@/components/stats-cards";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -6,6 +7,7 @@ import { getMembers } from "@/services/members";
 
 export default async function Home() {
   const members = await getMembers();
+  const formUrl = process.env.NEXT_PUBLIC_GOOGLE_FORM_URL;
 
   return (
     <main className="min-h-svh bg-muted/30">
@@ -31,6 +33,7 @@ export default async function Home() {
         </header>
 
         <StatsCards members={members} />
+        <AboutDirectory formUrl={formUrl} />
         <Separator />
 
         {members.length > 0 ? (
@@ -51,4 +54,3 @@ export default async function Home() {
     </main>
   );
 }
-

@@ -23,6 +23,7 @@
 # misc
 .DS_Store
 *.pem
+dahira-annuaire-16562f09b008.json
 
 # debug
 npm-debug.log*

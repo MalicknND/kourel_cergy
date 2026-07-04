@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { SearchX } from "lucide-react";
+import { ChevronLeft, ChevronRight, SearchX } from "lucide-react";
 
 import type { Member } from "@/types/member";
 import { Filters, type MemberFilters } from "@/components/filters";
@@ -20,14 +20,24 @@ const initialFilters: MemberFilters = {
   profession: "",
 };
 
+const MEMBERS_PER_PAGE = 6;
+
 export function MemberDirectory({ members }: MemberDirectoryProps) {
   const [query, setQuery] = useState("");
   const [filters, setFilters] = useState<MemberFilters>(initialFilters);
+  const [currentPage, setCurrentPage] = useState(1);
 
   const filteredMembers = useMemo(
     () => members.filter((member) => matchesQuery(member, query) && matchesFilters(member, filters)),
     [filters, members, query],
   );
+
+  const totalPages = Math.max(1, Math.ceil(filteredMembers.length / MEMBERS_PER_PAGE));
+  const activePage = Math.min(currentPage, totalPages);
+  const paginatedMembers = useMemo(() => {
+    const start = (activePage - 1) * MEMBERS_PER_PAGE;
+    return filteredMembers.slice(start, start + MEMBERS_PER_PAGE);
+  }, [activePage, filteredMembers]);
 
   const filterOptions = useMemo(
     () => ({
@@ -44,14 +54,23 @@ export function MemberDirectory({ members }: MemberDirectoryProps) {
     <section className="space-y-5">
       <div className="rounded-xl border bg-card/95 p-4 shadow-sm">
         <div className="grid gap-4">
-          <SearchBar value={query} onChange={setQuery} />
+          <SearchBar
+            value={query}
+            onChange={(value) => {
+              setQuery(value);
+              setCurrentPage(1);
+            }}
+          />
           <Separator />
           <Filters
             filters={filters}
             cities={filterOptions.cities}
             situations={filterOptions.situations}
             professions={filterOptions.professions}
-            onChange={setFilters}
+            onChange={(nextFilters) => {
+              setFilters(nextFilters);
+              setCurrentPage(1);
+            }}
           />
         </div>
       </div>
@@ -68,6 +87,7 @@ export function MemberDirectory({ members }: MemberDirectoryProps) {
             onClick={() => {
               setQuery("");
               setFilters(initialFilters);
+              setCurrentPage(1);
             }}
           >
             Réinitialiser
@@ -76,11 +96,19 @@ export function MemberDirectory({ members }: MemberDirectoryProps) {
       </div>
 
       {filteredMembers.length > 0 ? (
-        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-          {filteredMembers.map((member) => (
-            <MemberCard key={member.id} member={member} />
-          ))}
-        </div>
+        <>
+          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+            {paginatedMembers.map((member) => (
+              <MemberCard key={member.id} member={member} />
+            ))}
+          </div>
+          <DirectoryPagination
+            currentPage={activePage}
+            totalPages={totalPages}
+            totalResults={filteredMembers.length}
+            onPageChange={setCurrentPage}
+          />
+        </>
       ) : (
         <div className="flex min-h-72 flex-col items-center justify-center rounded-xl border border-dashed bg-card p-8 text-center">
           <SearchX className="size-10 text-muted-foreground" />
@@ -91,6 +119,80 @@ export function MemberDirectory({ members }: MemberDirectoryProps) {
         </div>
       )}
     </section>
+  );
+}
+
+function DirectoryPagination({
+  currentPage,
+  totalPages,
+  totalResults,
+  onPageChange,
+}: {
+  currentPage: number;
+  totalPages: number;
+  totalResults: number;
+  onPageChange: (page: number) => void;
+}) {
+  if (totalPages <= 1) {
+    return null;
+  }
+
+  const firstResult = (currentPage - 1) * MEMBERS_PER_PAGE + 1;
+  const lastResult = Math.min(currentPage * MEMBERS_PER_PAGE, totalResults);
+
+  return (
+    <nav
+      aria-label="Pagination des membres"
+      className="flex flex-col gap-3 rounded-xl border bg-card/95 p-3 shadow-sm sm:flex-row sm:items-center sm:justify-between"
+    >
+      <p className="text-sm font-medium text-muted-foreground">
+        {firstResult}-{lastResult} sur {totalResults} membres
+      </p>
+
+      <div className="flex items-center justify-between gap-2 sm:justify-end">
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          disabled={currentPage === 1}
+          onClick={() => onPageChange(currentPage - 1)}
+        >
+          <ChevronLeft className="size-4" />
+          Précédent
+        </Button>
+
+        <div className="flex items-center gap-1">
+          {Array.from({ length: totalPages }).map((_, index) => {
+            const page = index + 1;
+
+            return (
+              <Button
+                key={page}
+                type="button"
+                variant={page === currentPage ? "default" : "outline"}
+                size="icon-sm"
+                aria-label={`Page ${page}`}
+                aria-current={page === currentPage ? "page" : undefined}
+                onClick={() => onPageChange(page)}
+              >
+                {page}
+              </Button>
+            );
+          })}
+        </div>
+
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          disabled={currentPage === totalPages}
+          onClick={() => onPageChange(currentPage + 1)}
+        >
+          Suivant
+          <ChevronRight className="size-4" />
+        </Button>
+      </div>
+    </nav>
   );
 }
 

@@ -15,13 +15,30 @@ type MemberCardProps = {
 export function MemberCard({ member }: MemberCardProps) {
   const fullName = [member.prenom, member.nom].filter(Boolean).join(" ");
   const linkedInHref = toExternalHref(member.linkedIn);
+  const photoHref = toExternalHref(member.photo);
 
   return (
     <Card className="h-full rounded-lg bg-card/95 shadow-sm transition-all hover:-translate-y-0.5 hover:bg-card hover:shadow-md">
+      <div className="relative aspect-[4/3] overflow-hidden bg-primary/10">
+        {photoHref ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={photoHref}
+            alt={fullName ? `Photo de ${fullName}` : "Photo du membre"}
+            className="size-full object-cover object-top"
+            loading="lazy"
+          />
+        ) : (
+          <div className="flex size-full items-center justify-center bg-[radial-gradient(circle_at_top_left,var(--accent),transparent_45%),linear-gradient(135deg,var(--primary),color-mix(in_oklch,var(--primary),black_20%))] text-primary-foreground">
+            <span className="text-4xl font-semibold tracking-tight">{getInitials(member)}</span>
+          </div>
+        )}
+      </div>
+
       <CardHeader className="gap-4">
         <div className="flex items-start gap-3">
-          <Avatar className="size-12 rounded-lg">
-            <AvatarFallback className="rounded-lg bg-primary text-sm font-semibold text-primary-foreground">
+          <Avatar className="-mt-10 size-16 rounded-xl border-4 border-card shadow-sm">
+            <AvatarFallback className="rounded-lg bg-primary text-base font-semibold text-primary-foreground">
               {getInitials(member)}
             </AvatarFallback>
           </Avatar>

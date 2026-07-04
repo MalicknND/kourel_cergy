@@ -9,5 +9,5 @@ export type Member = {
   entreprise: string;
   situation: string;
   linkedIn: string;
+  photo: string;
 };
-

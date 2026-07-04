@@ -19,7 +19,7 @@ export function MemberCard({ member }: MemberCardProps) {
 
   return (
     <Card className="h-full rounded-lg bg-card/95 shadow-sm transition-all hover:-translate-y-0.5 hover:bg-card hover:shadow-md">
-      <div className="relative aspect-[4/3] overflow-hidden bg-primary/10">
+      <div className="relative aspect-4/3 overflow-hidden bg-primary/10">
         {photoHref ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
@@ -30,7 +30,9 @@ export function MemberCard({ member }: MemberCardProps) {
           />
         ) : (
           <div className="flex size-full items-center justify-center bg-[radial-gradient(circle_at_top_left,var(--accent),transparent_45%),linear-gradient(135deg,var(--primary),color-mix(in_oklch,var(--primary),black_20%))] text-primary-foreground">
-            <span className="text-4xl font-semibold tracking-tight">{getInitials(member)}</span>
+            <span className="text-4xl font-semibold tracking-tight">
+              {getInitials(member)}
+            </span>
           </div>
         )}
       </div>
@@ -55,7 +57,10 @@ export function MemberCard({ member }: MemberCardProps) {
       </CardHeader>
 
       <CardContent className="space-y-3 text-sm font-medium">
-        <InfoRow icon={Building2} value={member.entreprise || "Entreprise / école non renseignée"} />
+        <InfoRow
+          icon={Building2}
+          value={member.entreprise || "Entreprise / école non renseignée"}
+        />
         <InfoRow icon={MapPin} value={member.ville || "Ville non renseignée"} />
         <ContactActions email={member.email} phone={member.telephone} />
 
@@ -101,7 +106,7 @@ function InfoRow({
   return (
     <div className="flex gap-2 text-muted-foreground">
       <Icon className="mt-0.5 size-4 shrink-0 text-primary/70" />
-      <span className="min-w-0 break-words">{value}</span>
+      <span className="min-w-0 wrap-break-word">{value}</span>
     </div>
   );
 }
@@ -124,5 +129,7 @@ function toExternalHref(url: string): string | undefined {
     return undefined;
   }
 
-  return /^https?:\/\//i.test(trimmedUrl) ? trimmedUrl : `https://${trimmedUrl}`;
+  return /^https?:\/\//i.test(trimmedUrl)
+    ? trimmedUrl
+    : `https://${trimmedUrl}`;
 }

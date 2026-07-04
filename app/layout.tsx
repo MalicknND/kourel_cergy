@@ -15,9 +15,9 @@ const jetBrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Annuaire du Dahira",
+  title: "Annuaire du Kourel",
   description:
-    "Annuaire des membres du dahira pour favoriser l'entraide et les opportunités professionnelles.",
+    "Annuaire des membres du kourel pour favoriser l'entraide et les opportunités professionnelles.",
 };
 
 export default function RootLayout({

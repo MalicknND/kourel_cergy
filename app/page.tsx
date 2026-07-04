@@ -52,7 +52,7 @@ export default async function Home() {
         )}
 
         <footer className="border-t py-6 text-center text-sm font-medium text-muted-foreground">
-          Annuaire du Dahira - Fait pour faciliter l&apos;entraide et les
+          Annuaire du Kourel - Fait pour faciliter l&apos;entraide et les
           opportunités.
         </footer>
       </div>

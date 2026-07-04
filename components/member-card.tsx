@@ -27,7 +27,7 @@ export function MemberCard({ member }: MemberCardProps) {
           </Avatar>
           <div className="min-w-0 flex-1">
             <CardTitle className="truncate text-lg font-semibold tracking-tight">
-              {fullName || "Membre du dahira"}
+              {fullName || "Membre du kourel"}
             </CardTitle>
             <p className="mt-1 truncate text-sm font-medium text-muted-foreground">
               {member.profession || "Profession non renseignée"}
@@ -97,7 +97,7 @@ function getInitials(member: Member): string {
     .slice(0, 2)
     .toUpperCase();
 
-  return initials || "DA";
+  return initials || "KC";
 }
 
 function toExternalHref(url: string): string | undefined {

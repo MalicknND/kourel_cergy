@@ -1,11 +1,20 @@
 import { AboutDirectory } from "@/components/about-directory";
+import { LogoutButton } from "@/components/logout-button";
 import { MemberDirectory } from "@/components/member-directory";
 import { StatsCards } from "@/components/stats-cards";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Separator } from "@/components/ui/separator";
+import { auth } from "@/auth";
 import { getMembers } from "@/services/members";
+import { redirect } from "next/navigation";
 
 export default async function Home() {
+  const session = await auth();
+
+  if (!session?.user?.email) {
+    redirect("/login");
+  }
+
   const members = await getMembers();
   const formUrl = process.env.NEXT_PUBLIC_GOOGLE_FORM_URL;
 
@@ -13,8 +22,11 @@ export default async function Home() {
     <main className="min-h-svh bg-background">
       <div className="border-b bg-primary text-primary-foreground">
         <div className="mx-auto flex max-w-7xl flex-col gap-6 px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
-          <div className="inline-flex w-fit rounded-full border border-white/15 bg-white/10 px-3 py-1 text-sm font-medium text-white/80">
-            Kourel Cergy
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div className="inline-flex w-fit rounded-full border border-white/15 bg-white/10 px-3 py-1 text-sm font-medium text-white/80">
+              Kourel Cergy
+            </div>
+            <LogoutButton />
           </div>
           <div className="grid gap-5 lg:grid-cols-[1fr_auto] lg:items-end">
             <div className="max-w-3xl space-y-4">

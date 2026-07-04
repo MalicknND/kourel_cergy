@@ -41,6 +41,24 @@ const columnMap = {
 } satisfies Record<keyof Omit<Member, "id"> | "consentement", string[]>;
 
 export async function getMembers(): Promise<Member[]> {
+  return mapRowsToMembers(await getSheetRows());
+}
+
+export async function isAuthorizedMemberEmail(email: string): Promise<boolean> {
+  const normalizedEmail = normalizeEmail(email);
+
+  if (!normalizedEmail) {
+    return false;
+  }
+
+  const rows = await getSheetRows();
+  const [headers = [], ...bodyRows] = rows;
+  const headerIndexes = createHeaderIndexes(headers);
+
+  return bodyRows.some((row) => normalizeEmail(getCell(row, headerIndexes, columnMap.email)) === normalizedEmail);
+}
+
+async function getSheetRows(): Promise<string[][]> {
   const spreadsheetId = getRequiredEnv("GOOGLE_SHEETS_ID");
   const range = process.env.GOOGLE_SHEETS_RANGE || DEFAULT_MEMBERS_RANGE;
   const accessToken = await getAccessToken();
@@ -49,11 +67,11 @@ export async function getMembers(): Promise<Member[]> {
   const response = await fetch(url, getSheetsFetchOptions(accessToken));
 
   if (!response.ok) {
-    throw new Error("Impossible de récupérer les membres depuis Google Sheets.");
+    throw new Error("Impossible de récupérer les données depuis Google Sheets.");
   }
 
   const data = (await response.json()) as GoogleSheetsValuesResponse;
-  return mapRowsToMembers(data.values ?? []);
+  return data.values ?? [];
 }
 
 async function getAccessToken(): Promise<string> {
@@ -228,6 +246,10 @@ function normalizeHeader(value: string): string {
     .replace(/[\u0300-\u036f]/g, "")
     .trim()
     .toLowerCase();
+}
+
+function normalizeEmail(value: string): string {
+  return value.trim().toLowerCase();
 }
 
 function base64UrlEncode(value: string): string {

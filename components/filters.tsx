@@ -29,7 +29,7 @@ const ALL_VALUE = "all";
 export function Filters({ filters, cities, situations, professions, onChange }: FiltersProps) {
   return (
     <div className="grid gap-3 md:grid-cols-[auto_1fr_1fr_1fr] md:items-center">
-      <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
+      <div className="flex items-center gap-2 text-sm font-semibold text-muted-foreground">
         <SlidersHorizontal className="size-4" />
         Filtres
       </div>
@@ -68,7 +68,7 @@ function FilterSelect({
 }) {
   return (
     <Select value={value || ALL_VALUE} onValueChange={(nextValue) => onValueChange(nextValue === ALL_VALUE ? "" : nextValue)}>
-      <SelectTrigger className="h-10 w-full rounded-lg">
+      <SelectTrigger className="h-10 w-full rounded-lg bg-background font-medium shadow-xs">
         <SelectValue placeholder={label} />
       </SelectTrigger>
       <SelectContent>
@@ -82,4 +82,3 @@ function FilterSelect({
     </Select>
   );
 }
-

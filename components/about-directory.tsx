@@ -10,7 +10,7 @@ type AboutDirectoryProps = {
 export function AboutDirectory({ formUrl }: AboutDirectoryProps) {
   return (
     <section className="grid gap-4 lg:grid-cols-[1fr_auto] lg:items-center">
-      <Card className="rounded-lg">
+      <Card className="rounded-lg bg-card/95 shadow-sm">
         <CardContent className="flex flex-col gap-4 sm:flex-row sm:items-start">
           <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
             <ShieldCheck className="size-5" />
@@ -36,4 +36,3 @@ export function AboutDirectory({ formUrl }: AboutDirectoryProps) {
     </section>
   );
 }
-

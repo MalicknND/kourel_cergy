@@ -26,14 +26,14 @@ export function StatsCards({ members }: StatsCardsProps) {
       className="-mx-4 flex snap-x gap-3 overflow-x-auto px-4 pb-2 sm:mx-0 sm:grid sm:grid-cols-2 sm:overflow-visible sm:px-0 sm:pb-0 lg:grid-cols-4 xl:grid-cols-7"
     >
       {items.map((item) => (
-        <Card key={item.label} className="min-w-44 snap-start rounded-lg sm:min-w-0">
+        <Card key={item.label} className="min-w-44 snap-start rounded-lg bg-card/95 shadow-sm sm:min-w-0">
           <CardContent className="flex items-center gap-3">
-            <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+            <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
               <item.icon className="size-4" />
             </div>
             <div>
               <p className="text-2xl font-semibold tracking-tight">{item.value}</p>
-              <p className="text-xs text-muted-foreground">{item.label}</p>
+              <p className="text-xs font-medium text-muted-foreground">{item.label}</p>
             </div>
           </CardContent>
         </Card>

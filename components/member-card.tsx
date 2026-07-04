@@ -17,17 +17,19 @@ export function MemberCard({ member }: MemberCardProps) {
   const linkedInHref = toExternalHref(member.linkedIn);
 
   return (
-    <Card className="h-full rounded-lg bg-card/95 transition-colors hover:bg-card">
+    <Card className="h-full rounded-lg bg-card/95 shadow-sm transition-all hover:-translate-y-0.5 hover:bg-card hover:shadow-md">
       <CardHeader className="gap-4">
         <div className="flex items-start gap-3">
-          <Avatar className="size-11 rounded-lg">
-            <AvatarFallback className="rounded-lg bg-primary/10 text-sm font-semibold text-primary">
+          <Avatar className="size-12 rounded-lg">
+            <AvatarFallback className="rounded-lg bg-primary text-sm font-semibold text-primary-foreground">
               {getInitials(member)}
             </AvatarFallback>
           </Avatar>
           <div className="min-w-0 flex-1">
-            <CardTitle className="truncate text-base">{fullName || "Membre du dahira"}</CardTitle>
-            <p className="mt-1 truncate text-sm text-muted-foreground">
+            <CardTitle className="truncate text-lg font-semibold tracking-tight">
+              {fullName || "Membre du dahira"}
+            </CardTitle>
+            <p className="mt-1 truncate text-sm font-medium text-muted-foreground">
               {member.profession || "Profession non renseignée"}
             </p>
           </div>
@@ -35,7 +37,7 @@ export function MemberCard({ member }: MemberCardProps) {
         <SituationBadge situation={member.situation} />
       </CardHeader>
 
-      <CardContent className="space-y-3 text-sm">
+      <CardContent className="space-y-3 text-sm font-medium">
         <InfoRow icon={Building2} value={member.entreprise || "Entreprise / école non renseignée"} />
         <InfoRow icon={MapPin} value={member.ville || "Ville non renseignée"} />
         <ContactActions email={member.email} phone={member.telephone} />
@@ -81,7 +83,7 @@ function InfoRow({
 }) {
   return (
     <div className="flex gap-2 text-muted-foreground">
-      <Icon className="mt-0.5 size-4 shrink-0 text-muted-foreground" />
+      <Icon className="mt-0.5 size-4 shrink-0 text-primary/70" />
       <span className="min-w-0 break-words">{value}</span>
     </div>
   );

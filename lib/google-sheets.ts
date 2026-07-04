@@ -46,15 +46,7 @@ export async function getMembers(): Promise<Member[]> {
   const accessToken = await getAccessToken();
 
   const url = `${GOOGLE_SHEETS_API_BASE}/${spreadsheetId}/values/${encodeURIComponent(range)}`;
-  const response = await fetch(url, {
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
-    next: {
-      revalidate: REVALIDATE_SECONDS,
-      tags: ["members"],
-    },
-  });
+  const response = await fetch(url, getSheetsFetchOptions(accessToken));
 
   if (!response.ok) {
     throw new Error("Impossible de récupérer les membres depuis Google Sheets.");
@@ -97,6 +89,29 @@ async function getAccessToken(): Promise<string> {
   };
 
   return token.access_token;
+}
+
+function getSheetsFetchOptions(accessToken: string): RequestInit & {
+  next?: { revalidate: number; tags: string[] };
+} {
+  const headers = {
+    Authorization: `Bearer ${accessToken}`,
+  };
+
+  if (process.env.NODE_ENV === "development") {
+    return {
+      headers,
+      cache: "no-store",
+    };
+  }
+
+  return {
+    headers,
+    next: {
+      revalidate: REVALIDATE_SECONDS,
+      tags: ["members"],
+    },
+  };
 }
 
 function createJwtAssertion(): string {

@@ -42,7 +42,7 @@ export function MemberDirectory({ members }: MemberDirectoryProps) {
 
   return (
     <section className="space-y-5">
-      <div className="rounded-xl border bg-card p-4 shadow-sm">
+      <div className="rounded-xl border bg-card/95 p-4 shadow-sm">
         <div className="grid gap-4">
           <SearchBar value={query} onChange={setQuery} />
           <Separator />
@@ -138,4 +138,3 @@ function normalize(value: string): string {
     .trim()
     .toLowerCase();
 }
-

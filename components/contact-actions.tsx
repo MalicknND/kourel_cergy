@@ -23,7 +23,7 @@ export function ContactActions({ email, phone }: ContactActionsProps) {
       <Button
         type="button"
         variant="outline"
-        className="w-full"
+        className="w-full font-semibold"
         onClick={() => setIsRevealed(true)}
       >
         <Eye className="size-4" />
@@ -35,7 +35,7 @@ export function ContactActions({ email, phone }: ContactActionsProps) {
   return (
     <div className="grid gap-2 sm:grid-cols-2">
       {phone ? (
-        <Button asChild variant="secondary" className="justify-start overflow-hidden">
+        <Button asChild variant="secondary" className="justify-start overflow-hidden font-semibold">
           <a href={`tel:${phone.replace(/[^\d+]/g, "")}`}>
             <Phone className="size-4 shrink-0" />
             <span className="truncate">{phone}</span>
@@ -43,7 +43,7 @@ export function ContactActions({ email, phone }: ContactActionsProps) {
         </Button>
       ) : null}
       {email ? (
-        <Button asChild variant="secondary" className="justify-start overflow-hidden">
+        <Button asChild variant="secondary" className="justify-start overflow-hidden font-semibold">
           <a href={`mailto:${email}`}>
             <Mail className="size-4 shrink-0" />
             <span className="truncate">{email}</span>
@@ -53,4 +53,3 @@ export function ContactActions({ email, phone }: ContactActionsProps) {
     </div>
   );
 }
-

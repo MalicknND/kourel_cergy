@@ -37,6 +37,7 @@ const columnMap = {
   entreprise: ["Entreprise / École", "Entreprise / Ecole", "Entreprise", "École", "Ecole"],
   situation: ["Votre situation actuelle", "Situation actuelle", "Situation"],
   linkedIn: ["Lien LinkedIn", "LinkedIn", "Lien Linkedin", "Profil LinkedIn", "Profil Linkedin"],
+  photo: ["Photo", "Image", "Image URL", "Photo URL", "Lien photo", "Lien image", "Avatar"],
   consentement: ["Souhaitez-vous apparaître dans l'annuaire des membres du Kourel ?", "Apparaître dans l'annuaire", "Apparaitre dans l'annuaire", "Consentement"],
 } satisfies Record<keyof Omit<Member, "id"> | "consentement", string[]>;
 
@@ -197,6 +198,7 @@ function createMember(
     entreprise: getCell(row, headerIndexes, columnMap.entreprise),
     situation: getCell(row, headerIndexes, columnMap.situation),
     linkedIn: getCell(row, headerIndexes, columnMap.linkedIn),
+    photo: getCell(row, headerIndexes, columnMap.photo),
   };
 }
 
